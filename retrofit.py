@@ -24,9 +24,9 @@ def read_word_vecs(filename):
   
   for line in fileObject:
     line = line.strip().lower()
-    word = line.split()[0]
-    wordVectors[word] = numpy.zeros(len(line.split())-1, dtype=float)
-    for index, vecVal in enumerate(line.split()[1:]):
+    word = line.split(",")[0]
+    wordVectors[word] = numpy.zeros(len(line.split(","))-1, dtype=float)
+    for index, vecVal in enumerate(line.split(",")[1:]):
       wordVectors[word][index] = float(vecVal)
     ''' normalize weight vector '''
     wordVectors[word] /= math.sqrt((wordVectors[word]**2).sum() + 1e-6)
@@ -39,9 +39,9 @@ def print_word_vecs(wordVectors, outFileName):
   sys.stderr.write('\nWriting down the vectors in '+outFileName+'\n')
   outFile = open(outFileName, 'w')  
   for word, values in wordVectors.iteritems():
-    outFile.write(word+' ')
+    outFile.write(word)
     for val in wordVectors[word]:
-      outFile.write('%.4f' %(val)+' ')
+      outFile.write(',%.4f' %(val))
     outFile.write('\n')      
   outFile.close()
   
