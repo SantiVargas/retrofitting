@@ -16,8 +16,11 @@ def norm_word(word):
   else:
     return word.lower()
 
+def normalize_weight_vector(vector):
+  return vector / math.sqrt((vector**2).sum() + 1e-6)
+
 ''' Read all the word vectors and normalize them '''
-def read_word_vecs(filename):
+def read_word_vecs(filename, normalize = True):
   wordVectors = {}
   if filename.endswith('.gz'): fileObject = gzip.open(filename, 'r')
   else: fileObject = open(filename, 'r')
@@ -28,8 +31,9 @@ def read_word_vecs(filename):
     wordVectors[word] = numpy.zeros(len(line.split(","))-1, dtype=float)
     for index, vecVal in enumerate(line.split(",")[1:]):
       wordVectors[word][index] = float(vecVal)
-    ''' normalize weight vector '''
-    wordVectors[word] /= math.sqrt((wordVectors[word]**2).sum() + 1e-6)
+    if normalize:
+      ''' normalize weight vector '''
+      wordVectors[word] = normalize_weight_vector(wordVectors[word])
     
   sys.stderr.write("Vectors read from: "+filename+" \n")
   return wordVectors
